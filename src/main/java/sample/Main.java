@@ -1,7 +1,5 @@
 package sample;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -12,7 +10,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
+
+import java.awt.*;
 
 
 public class Main extends Application {
@@ -21,13 +20,15 @@ public class Main extends Application {
     private double yOffset=0;
     @Override
     public void start(Stage primaryStage){
-
+        Toolkit kit = Toolkit.getDefaultToolkit();
+        Dimension screen = kit.getScreenSize();
         BorderPane borderPane=new BorderPane();
         Image image=new Image("a1.png");
         ImageView imageView=new ImageView(image);
 
-        borderPane.setCenter(imageView);
-
+        primaryStage.setX(screen.width-100);
+        primaryStage.setY(screen.height);
+        borderPane.setBottom(imageView);
         /**
          * Mouse Clicked
          * 点击事件暂无
@@ -38,11 +39,6 @@ public class Main extends Application {
 
         EventHandler<ActionEvent> eventHandler= event -> {
         };
-
-        KeyFrame keyFrame=new KeyFrame(Duration.millis(500),eventHandler);
-        Timeline animation=new Timeline(keyFrame);
-        animation.setCycleCount(Timeline.INDEFINITE);
-        animation.play();
 
         primaryStage.initStyle(StageStyle.TRANSPARENT);
         Scene scene=new Scene(borderPane);
@@ -56,19 +52,24 @@ public class Main extends Application {
         new Thread(()->{
             while (true) {
                 Image imageChange;
-                for (int i = 1; i <= 6; i++) {
+                for (int j = 1; j <= 6; j++) {
                     try {
-                        Thread.sleep(300);
+                        Thread.sleep(20);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    imageChange = new Image("a" + i + ".png");
-                    double xChange = -10 + Math.random() * (10 + 10);
-                    double yChange = -10 + Math.random() * (10 + 10);
-                    System.out.println(xChange+"  "+yChange);
-                    primaryStage.setX(primaryStage.getX()-xChange);
-                    primaryStage.setY(primaryStage.getY()-yChange);
+                    imageChange = new Image("a" + j + ".png");
+//                    double xChange =  Math.random() * (-10) + Math.random() * (10);
+//                    double yChange = -3 + Math.random() * (20 + 3);
+//                    System.out.println(xChange+"  "+yChange);
+//                    primaryStage.setX(primaryStage.getX()-xChange);
+                    primaryStage.setY(primaryStage.getY()-20);
                     imageView.setImage(imageChange);
+                    if (primaryStage.getY()<=-20){
+                        primaryStage.setX( Math.random() * (screen.width));
+                        System.out.println(Math.random() * (screen.width));
+                        primaryStage.setY(screen.height);
+                    }
                 }
             }
         }).start();
@@ -84,7 +85,8 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    public void newLaunch(){
+        launch();
     }
+
 }
